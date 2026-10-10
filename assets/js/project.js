@@ -1,0 +1,159 @@
+const projects = {
+  ecommerce: {
+    category: 'E-COMMERCE · PROFITABILITY',
+    title: 'E-commerce Performance & Profitability',
+    summary: 'A retail performance analysis connecting sales growth to contribution margin, promotions, returns, fulfilment, and inventory health.',
+    metrics: [
+      ['€640.42K', 'Net sales'],
+      ['19.42%', 'Contribution margin'],
+      ['€102.90K', 'Return loss'],
+      ['€36.71K', 'Lost to stock-outs'],
+    ],
+    pdf: '../E-Commerce and Profitability Analytics/E-Commerce and Profitability Analysis.pdf',
+    files: [
+      ['Read report · PDF', '../E-Commerce and Profitability Analytics/E-Commerce and Profitability Analysis.pdf'],
+      ['Report · PowerPoint', '../extracted-ecommerce/E-Commerce Performance Analysis Report.pptx'],
+      ['Dataset · Excel', '../extracted-ecommerce/E-Commerce and Profitability Dataset.xlsx'],
+    ],
+  },
+  marketing: {
+    category: 'MARKETING · CUSTOMER ACQUISITION',
+    title: 'Marketing & Customer Acquisition',
+    summary: 'A channel and customer-value analysis exploring acquisition cost, promotion returns, segment performance, and customer lifecycle.',
+    metrics: [
+      ['€640.42K', 'Net sales'],
+      ['2,200', 'Customers acquired'],
+      ['€13.58', 'Cost per customer'],
+      ['73%', 'Margin from top segments'],
+    ],
+    pdf: '../Marketing and Customer Acquisition Analytics/Marketing and Customer Acquisition Analysis.pdf',
+    files: [
+      ['Report · PowerPoint', '../Marketing and Customer Acquisition Analytics/Marketing and Customer Acquisition Report.pptx'],
+      ['Dataset · Excel', '../Marketing and Customer Acquisition Analytics/E-Commerce Marketing Dataset.xlsx'],
+    ],
+  },
+  saas: {
+    category: 'SAAS · SUBSCRIPTIONS & CHURN',
+    title: 'SaaS Subscription & Churn Analytics',
+    summary: 'A subscription health study connecting recurring revenue, churn risk, account segments, product engagement, and customer support.',
+    metrics: [
+      ['$10.16M', 'Monthly recurring revenue'],
+      ['22%', 'Account churn'],
+      ['$4.66M', 'MRR at risk'],
+      ['500', 'Customer accounts'],
+    ],
+    pdf: '../SaaS Subscription and Churn Analytics/SaaS Subscription and Churn Analysis.pdf',
+    files: [
+      ['Report · PowerPoint', '../SaaS Subscription and Churn Analytics/SaaS_Subscription_Churn_Report.pptx'],
+      ['Dataset guide · README', '../SaaS Subscription and Churn Analytics/Data Collection/README.md'],
+      ['Dataset · Accounts CSV', '../SaaS Subscription and Churn Analytics/Data Collection/ravenstack_accounts.csv'],
+      ['Dataset · Subscriptions CSV', '../SaaS Subscription and Churn Analytics/Data Collection/ravenstack_subscriptions.csv'],
+      ['Dataset · Churn events CSV', '../SaaS Subscription and Churn Analytics/Data Collection/ravenstack_churn_events.csv'],
+      ['Dataset · Feature usage CSV', '../SaaS Subscription and Churn Analytics/Data Collection/ravenstack_feature_usage.csv'],
+      ['Dataset · Support tickets CSV', '../SaaS Subscription and Churn Analytics/Data Collection/ravenstack_support_tickets.csv'],
+    ],
+  },
+};
+
+const selectedProject = new URLSearchParams(window.location.search).get('project');
+const project = projects[selectedProject];
+
+if (project) {
+  document.title = `${project.title} | Mathal Case Study`;
+  document.getElementById('project-category').textContent = project.category;
+  document.getElementById('project-title').textContent = project.title;
+  document.getElementById('project-summary').textContent = project.summary;
+  document.getElementById('report-title').textContent = `${project.title} report`;
+
+  const reportReader = document.getElementById('report-reader');
+  const reportStatus = document.getElementById('report-status');
+  const readButton = document.getElementById('project-read-button');
+  readButton.href = '#report-reader';
+  readButton.setAttribute('aria-label', `Read the ${project.title} report`);
+  readButton.addEventListener('click', (event) => {
+    event.preventDefault();
+    document.getElementById('report-reader')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  });
+
+  const renderReportPages = async () => {
+    reportStatus.textContent = 'Loading report pages…';
+    reportReader.innerHTML = '';
+
+    if (!window.pdfjsLib || !window.pdfjsLib.getDocument) {
+      reportStatus.textContent = 'The report viewer is unavailable right now.';
+      return;
+    }
+
+    try {
+      const pdf = await window.pdfjsLib.getDocument(project.pdf).promise;
+      reportStatus.textContent = `Showing ${pdf.numPages} page${pdf.numPages === 1 ? '' : 's'} for reading`;
+
+      for (let pageNumber = 1; pageNumber <= pdf.numPages; pageNumber += 1) {
+        const page = await pdf.getPage(pageNumber);
+        const viewport = page.getViewport({ scale: 1.15 });
+        const canvas = document.createElement('canvas');
+        const context = canvas.getContext('2d');
+        const wrapper = document.createElement('figure');
+        const pageLabel = document.createElement('figcaption');
+
+        canvas.width = viewport.width;
+        canvas.height = viewport.height;
+        wrapper.className = 'report-page';
+        pageLabel.className = 'report-page-label';
+        pageLabel.textContent = `Page ${pageNumber}`;
+
+        await page.render({ canvasContext: context, viewport }).promise;
+
+        wrapper.appendChild(canvas);
+        wrapper.appendChild(pageLabel);
+        reportReader.appendChild(wrapper);
+      }
+    } catch (error) {
+      console.error('Unable to render report pages:', error);
+      reportStatus.textContent = 'The report could not be rendered in-page. Please try again later.';
+      reportReader.innerHTML = '<p class="report-fallback">This report is available in the project files list below.</p>';
+    }
+  };
+
+  if (window.pdfjsLib) {
+    window.pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+  }
+
+  renderReportPages();
+
+  document.getElementById('project-metrics').innerHTML = project.metrics
+    .map(([value, label]) => `<article class="project-metric"><strong>${value}</strong><span>${label}</span></article>`)
+    .join('');
+
+  const groupedFiles = {
+    reports: project.files.filter(([label]) => label.toLowerCase().includes('report')),
+    datasets: project.files.filter(([label]) => !label.toLowerCase().includes('report')),
+  };
+
+  const renderGroup = (title, items) => {
+    if (!items.length) {
+      return '';
+    }
+
+    return `
+      <div class="project-file-group">
+        <h3>${title}</h3>
+        ${items
+          .map(
+            ([label, href]) =>
+              `<a class="project-file-link" href="${href}" target="_blank" rel="noopener"><span>${label}</span></a>`,
+          )
+          .join('')}
+      </div>
+    `;
+  };
+
+  document.getElementById('project-file-list').innerHTML = `${renderGroup('Reports', groupedFiles.reports)}${renderGroup('Datasets', groupedFiles.datasets)}`;
+} else {
+  document.title = 'Project not found | Mathal';
+  document.getElementById('project-category').textContent = 'CASE STUDY NOT FOUND';
+  document.getElementById('project-title').textContent = 'This project link is not available.';
+  document.getElementById('project-summary').textContent = 'Choose a project from the case studies page to view its report.';
+  document.querySelector('.project-report').hidden = true;
+  document.querySelector('.project-files').hidden = true;
+}
