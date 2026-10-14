@@ -1490,6 +1490,489 @@ textarea {
   text-transform: uppercase;
 }
 
+/* ========================================
+   MATHAL PDF REPORT VIEWER
+======================================== */
+
+.final-report-section {
+  margin-block: 4rem;
+}
+
+.final-report-intro {
+  max-width: 760px;
+  margin: 0 auto 2rem;
+  text-align: center;
+}
+
+.final-report-description {
+  color: hsl(220, 15%, 40%);
+  line-height: 1.8;
+}
+
+.final-report-note {
+  color: hsl(220, 12%, 50%);
+  font-size: 0.9rem;
+}
+
+.final-report-viewer {
+  width: 100%;
+  max-width: 1000px;
+  margin-inline: auto;
+  padding: clamp(0.75rem, 3vw, 2rem);
+
+  background: hsl(0, 0%, 100%);
+  border: 1px solid hsl(220, 20%, 88%);
+  border-radius: 1rem;
+
+  box-shadow: 0 1rem 3rem hsl(220, 35%, 20%, 0.07);
+}
+
+.final-report-pages {
+  display: grid;
+  gap: 2rem;
+}
+
+.final-report-page {
+  overflow: hidden;
+  background: hsl(0, 0%, 100%);
+  border: 1px solid hsl(220, 15%, 90%);
+  border-radius: 0.4rem;
+}
+
+.final-report-page canvas {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+.final-report-page-label {
+  margin: 0;
+  padding: 0.75rem 1rem;
+
+  color: hsl(220, 12%, 45%);
+  background: hsl(220, 25%, 97%);
+
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+}
+
+.final-report-loading {
+  padding: 2rem;
+  color: hsl(220, 15%, 40%);
+  text-align: center;
+}
+
+@media (max-width: 600px) {
+  .final-report-viewer {
+    padding: 0.5rem;
+    border-radius: 0.6rem;
+  }
+
+  .final-report-pages {
+    gap: 1rem;
+  }
+}
+
+
+.dataset-viewer-section {
+  width: 100%;
+  margin: 4rem auto;
+}
+
+.dataset-viewer-heading {
+  max-width: 760px;
+  margin: 0 auto 2rem;
+  text-align: center;
+}
+
+.dataset-viewer-heading h2 {
+  color: hsl(222, 35%, 15%);
+  font-size: clamp(1.75rem, 4vw, 2.5rem);
+  line-height: 1.2;
+}
+
+.dataset-viewer-heading > p:last-child {
+  color: hsl(220, 12%, 42%);
+  line-height: 1.8;
+}
+
+.dataset-pdf-container {
+  width: 100%;
+  max-width: 1100px;
+  height: 800px;
+  margin: 0 auto;
+  overflow: hidden;
+
+  border: 1px solid hsl(220, 20%, 88%);
+  border-radius: 16px;
+
+  background-color: hsl(220, 20%, 97%);
+  box-shadow: 0 16px 40px hsl(220, 35%, 15%, 0.07);
+}
+
+.dataset-pdf-container iframe {
+  display: block;
+  width: 100%;
+  height: 100%;
+  border: none;
+  background-color: hsl(0, 0%, 100%);
+}
+
+.dataset-viewer-section[hidden] {
+  display: none;
+}
+
+@media (max-width: 768px) {
+  .dataset-viewer-section {
+    margin: 3rem auto;
+  }
+
+  .dataset-viewer-heading {
+    text-align: left;
+  }
+
+  .dataset-pdf-container {
+    height: 650px;
+    border-radius: 12px;
+  }
+}
+
+/* ========================================
+   FINAL REPORT SECTION
+======================================== */
+
+.final-report-section {
+  width: 100%;
+  margin: 6rem auto 5rem;
+}
+
+.final-report-intro {
+  max-width: 850px;
+  margin: 0 auto 3rem;
+  text-align: center;
+}
+
+.final-report-intro .eyebrow {
+  margin-bottom: 1rem;
+  color: hsl(220, 85%, 55%);
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+
+.final-report-intro h2 {
+  margin: 0 auto 1.25rem;
+  color: hsl(222, 35%, 15%);
+  font-size: clamp(2rem, 4vw, 3.25rem);
+  line-height: 1.15;
+  letter-spacing: -0.045em;
+}
+
+.final-report-description {
+  max-width: 740px;
+  margin: 0 auto;
+  color: hsl(220, 12%, 42%);
+  font-size: 1rem;
+  line-height: 1.9;
+}
+
+
+/* ========================================
+   REPORT HIGHLIGHTS
+======================================== */
+
+.final-report-highlights {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 1rem;
+  margin-top: 2.5rem;
+}
+
+.final-report-highlight {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 0.6rem;
+
+  min-height: 110px;
+  padding: 1.25rem;
+
+  border: 1px solid hsl(220, 20%, 90%);
+  border-radius: 14px;
+
+  background-color: hsl(0, 0%, 100%);
+  box-shadow: 0 8px 24px hsl(220, 35%, 15%, 0.035);
+}
+
+.highlight-value {
+  color: hsl(222, 35%, 18%);
+  font-size: clamp(1.1rem, 2vw, 1.6rem);
+  font-weight: 750;
+  letter-spacing: -0.035em;
+}
+
+.highlight-label {
+  color: hsl(220, 12%, 45%);
+  font-size: 0.8rem;
+  line-height: 1.5;
+}
+
+.final-report-note {
+  margin-top: 1.5rem;
+  color: hsl(220, 10%, 50%);
+  font-size: 0.85rem;
+  line-height: 1.7;
+}
+
+
+/* ========================================
+   REPORT VIEWER
+======================================== */
+
+.final-report-viewer {
+  width: 100%;
+  max-width: 1100px;
+  margin: 0 auto;
+
+  padding: clamp(0.75rem, 2vw, 1.5rem);
+
+  border: 1px solid hsl(220, 20%, 89%);
+  border-radius: 22px;
+
+  background-color: hsl(220, 20%, 97%);
+  box-shadow: 0 20px 55px hsl(220, 35%, 15%, 0.07);
+}
+
+.final-report-pages {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2rem;
+}
+
+.final-report-page {
+  width: 100%;
+  max-width: 900px;
+  overflow: hidden;
+
+  border: 1px solid hsl(220, 15%, 88%);
+  border-radius: 8px;
+
+  background-color: hsl(0, 0%, 100%);
+  box-shadow: 0 8px 25px hsl(220, 35%, 15%, 0.06);
+}
+
+.final-report-page canvas {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+.final-report-page-label {
+  margin: 0;
+  padding: 0.75rem 1rem;
+
+  border-bottom: 1px solid hsl(220, 20%, 92%);
+
+  background-color: hsl(0, 0%, 100%);
+  color: hsl(220, 10%, 48%);
+
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+}
+
+.final-report-loading {
+  padding: 2rem;
+  color: hsl(220, 12%, 42%);
+  text-align: center;
+}
+
+.final-report-section[hidden] {
+  display: none;
+}
+
+/* ========================================
+   FINAL PROJECT REPORT
+======================================== */
+
+.final-report-section {
+  width: 100%;
+  margin: 6rem auto 5rem;
+}
+
+.final-report-intro {
+  max-width: 850px;
+  margin: 0 auto 3rem;
+  text-align: center;
+}
+
+.final-report-intro .eyebrow {
+  margin-bottom: 1rem;
+  color: hsl(220, 85%, 55%);
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+
+.final-report-intro h2 {
+  margin: 0 auto 1.25rem;
+  color: hsl(222, 35%, 15%);
+  font-size: clamp(2rem, 4vw, 3.25rem);
+  line-height: 1.15;
+  letter-spacing: -0.045em;
+}
+
+.final-report-description {
+  max-width: 740px;
+  margin: 0 auto;
+  color: hsl(220, 12%, 42%);
+  font-size: 1rem;
+  line-height: 1.9;
+}
+
+.final-report-note {
+  margin-top: 1.5rem;
+  color: hsl(220, 10%, 50%);
+  font-size: 0.85rem;
+  line-height: 1.7;
+}
+
+/* PDF viewer container */
+
+.final-report-viewer {
+  width: 100%;
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: clamp(0.75rem, 2vw, 1.5rem);
+
+  border: 1px solid hsl(220, 20%, 89%);
+  border-radius: 22px;
+
+  background-color: hsl(220, 20%, 97%);
+  box-shadow: 0 20px 55px hsl(220, 35%, 15%, 0.07);
+}
+
+/* Stack pages vertically */
+
+.final-report-pages {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2rem;
+}
+
+/* Individual page */
+
+.final-report-page {
+  width: 100%;
+  max-width: 900px;
+  overflow: hidden;
+
+  border: 1px solid hsl(220, 15%, 88%);
+  border-radius: 8px;
+
+  background-color: hsl(0, 0%, 100%);
+  box-shadow: 0 8px 25px hsl(220, 35%, 15%, 0.06);
+}
+
+.final-report-page canvas {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+/* Page number label */
+
+.final-report-page-label {
+  margin: 0;
+  padding: 0.75rem 1rem;
+
+  border-bottom: 1px solid hsl(220, 20%, 92%);
+
+  background-color: hsl(0, 0%, 100%);
+  color: hsl(220, 10%, 48%);
+
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+}
+
+/* Loading and error messages */
+
+.final-report-loading {
+  padding: 2rem;
+  color: hsl(220, 12%, 42%);
+  text-align: center;
+}
+
+.final-report-section[hidden] {
+  display: none;
+}
+
+/* Responsive design */
+
+@media (max-width: 768px) {
+  .final-report-section {
+    margin: 4rem auto;
+  }
+
+  .final-report-intro {
+    text-align: left;
+  }
+
+  .final-report-viewer {
+    padding: 0.5rem;
+    border-radius: 14px;
+  }
+
+  .final-report-pages {
+    gap: 1rem;
+  }
+}
+
+/* ========================================
+   RESPONSIVE DESIGN
+======================================== */
+
+@media (max-width: 900px) {
+  .final-report-highlights {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .final-report-section {
+    margin: 4rem auto;
+  }
+}
+
+@media (max-width: 600px) {
+  .final-report-intro {
+    text-align: left;
+  }
+
+  .final-report-highlights {
+    gap: 0.75rem;
+  }
+
+  .final-report-highlight {
+    min-height: 95px;
+    padding: 0.9rem;
+  }
+
+  .final-report-viewer {
+    padding: 0.5rem;
+    border-radius: 14px;
+  }
+
+  .final-report-pages {
+    gap: 1rem;
+  }
+}
+
+
 .project-file-link {
   display: flex;
   align-items: center;
