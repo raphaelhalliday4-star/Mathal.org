@@ -178,8 +178,20 @@ if (project.finalReportPdf && finalReportPages) {
 
           const page = await pdf.getPage(pageNumber);
 
+          const containerWidth =
+            finalReportPages.clientWidth || 800;
+
+          const originalViewport = page.getViewport({
+            scale: 1,
+          });
+
+          const scale = Math.min(
+            containerWidth / originalViewport.width,
+            1.5
+          );
+
           const viewport = page.getViewport({
-            scale: 1.3,
+            scale: Math.max(scale, 0.1),
           });
 
           const canvas = document.createElement('canvas');
