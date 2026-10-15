@@ -4,6 +4,7 @@ const projects = {
     title: 'E-commerce Performance & Profitability',
     datasetPdf: '../reports/E-Commerce Marketing Dataset.pdf',
     finalReportPdf: '../reports/E-Commerce Performance Analysis Report.pdf',
+    analysisPdf: '../reports/E-Commerce and Profitability Analysis.pdf',
     reportHeading: 'Understanding E-commerce Performance and Profitability',
   reportDescription:
   'Explore how sales growth translates into business profitability. This report examines contribution margins, promotional spending, return losses, and inventory availability to identify opportunities to improve financial performance and operational efficiency.',
@@ -44,6 +45,7 @@ datasetPdf: '../reports/E-Commerce Marketing Dataset.pdf',
     title: 'Marketing & Customer Acquisition',
     finalReportPdf:
   '../reports/Marketing and Customer Acquisition Report.pdf',
+  analysisPdf: '../reports/Marketing and Customer Acquisition Analysis.pdf',
   reportHeading:
     'Measuring Marketing Performance and Customer Value',
 
@@ -70,6 +72,7 @@ datasetPdf: '../reports/E-Commerce Marketing Dataset.pdf',
     title: 'SaaS Subscription & Churn Analytics',
     finalReportPdf:
   '../reports/SaaS_Subscription_Churn_Report.pdf',
+  analysisPdf: '../reports/SaaS Subscription and Churn Analysis.pdf',
     reportHeading: 'Understanding Subscription Health and Customer Retention',
     reportDescription:
   'Explore recurring revenue, customer churn, subscription performance, and retention risks to identify opportunities to strengthen customer relationships and protect recurring revenue.',
@@ -240,65 +243,131 @@ if (project.finalReportPdf && finalReportPages) {
   finalReportSection.hidden = true;
 }
 
+  // ========================================
+// ADDITIONAL PROJECT ANALYSIS PDF VIEWER
+// ========================================
 
-  document.getElementById('report-title').textContent = `${project.title} report`;
+const analysisReportSection = document.getElementById(
+  'analysis-report-section'
+);
 
-  const reportReader = document.getElementById('report-reader');
-  const reportStatus = document.getElementById('report-status');
-  const readButton = document.getElementById('project-read-button');
-  readButton.href = '#report-reader';
-  readButton.setAttribute('aria-label', `Read the ${project.title} report`);
-  readButton.addEventListener('click', (event) => {
-    event.preventDefault();
-    document.getElementById('report-reader')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
-  });
+const analysisReportTitle = document.getElementById(
+  'analysis-report-title'
+);
 
-  const renderReportPages = async () => {
-    reportStatus.textContent = 'Loading report pages…';
-    reportReader.innerHTML = '';
+const analysisReportDescription = document.getElementById(
+  'analysis-report-description'
+);
 
-    if (!window.pdfjsLib || !window.pdfjsLib.getDocument) {
-      reportStatus.textContent = 'The report viewer is unavailable right now.';
-      return;
-    }
+const analysisReportPages = document.getElementById(
+  'analysis-report-pages'
+);
 
-    try {
-      const pdf = await window.pdfjsLib.getDocument(project.pdf).promise;
-      reportStatus.textContent = `Showing ${pdf.numPages} page${pdf.numPages === 1 ? '' : 's'} for reading`;
+if (project.analysisPdf && analysisReportPages) {
 
-      for (let pageNumber = 1; pageNumber <= pdf.numPages; pageNumber += 1) {
-        const page = await pdf.getPage(pageNumber);
-        const viewport = page.getViewport({ scale: 1.15 });
-        const canvas = document.createElement('canvas');
-        const context = canvas.getContext('2d');
-        const wrapper = document.createElement('figure');
-        const pageLabel = document.createElement('figcaption');
-
-        canvas.width = viewport.width;
-        canvas.height = viewport.height;
-        wrapper.className = 'report-page';
-        pageLabel.className = 'report-page-label';
-        pageLabel.textContent = `Page ${pageNumber}`;
-
-        await page.render({ canvasContext: context, viewport }).promise;
-
-        wrapper.appendChild(canvas);
-        wrapper.appendChild(pageLabel);
-        reportReader.appendChild(wrapper);
-      }
-    } catch (error) {
-      console.error('Unable to render report pages:', error);
-      reportStatus.textContent = 'The report could not be rendered in-page. Please try again later.';
-      reportReader.innerHTML = '<p class="report-fallback">This report is available in the project files list below.</p>';
-    }
-  };
-
-  if (window.pdfjsLib) {
-    window.pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+  // Set the analysis heading.
+  if (analysisReportTitle) {
+    analysisReportTitle.textContent =
+      project.analysisHeading || `${project.title} Analysis`;
   }
 
-  renderReportPages();
+  // Set the analysis description.
+  if (analysisReportDescription) {
+    analysisReportDescription.textContent =
+      project.analysisDescription ||
+      `Explore the detailed analysis behind ${project.title}.`;
+  }
 
+  // Check whether PDF.js is available.
+  if (!window.pdfjsLib) {
+    analysisReportPages.textContent =
+      'The analysis preview is currently unavailable.';
+  } else {
+
+    window.pdfjsLib.GlobalWorkerOptions.workerSrc =
+      'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+
+    // Load the analysis PDF for the selected project.
+    window.pdfjsLib
+      .getDocument(project.analysisPdf)
+      .promise
+      .then(async (pdf) => {
+
+        analysisReportPages.innerHTML = '';
+
+        // Display no more than five pages.
+        const pagesToShow = Math.min(5, pdf.numPages);
+
+        for (
+          let pageNumber = 1;
+          pageNumber <= pagesToShow;
+          pageNumber++
+        ) {
+
+          const page = await pdf.getPage(pageNumber);
+
+          const containerWidth =
+            analysisReportPages.clientWidth || 800;
+
+          const originalViewport = page.getViewport({
+            scale: 1,
+          });
+
+          const scale = Math.min(
+            containerWidth / originalViewport.width,
+            1.5
+          );
+
+          const viewport = page.getViewport({
+            scale: Math.max(scale, 0.1),
+          });
+
+          const canvas = document.createElement('canvas');
+
+          const context = canvas.getContext('2d');
+
+          canvas.width = viewport.width;
+          canvas.height = viewport.height;
+
+          const pageWrapper = document.createElement('article');
+
+          pageWrapper.className = 'final-report-page';
+
+          const pageLabel = document.createElement('p');
+
+          pageLabel.className = 'final-report-page-label';
+
+          pageLabel.textContent = `PAGE ${pageNumber}`;
+
+          await page.render({
+            canvasContext: context,
+            viewport,
+          }).promise;
+
+          pageWrapper.appendChild(pageLabel);
+          pageWrapper.appendChild(canvas);
+
+          analysisReportPages.appendChild(pageWrapper);
+        }
+      })
+      .catch((error) => {
+
+        console.error(
+          'Unable to render project analysis:',
+          error
+        );
+
+        analysisReportPages.textContent =
+          'Unable to load the analysis PDF. Please check the file path.';
+      });
+  }
+
+} else if (analysisReportSection) {
+
+  // Hide the analysis section if no analysis PDF exists.
+  analysisReportSection.hidden = true;
+}
+ 
   document.getElementById('project-metrics').innerHTML = project.metrics
     .map(([value, label]) => `<article class="project-metric"><strong>${value}</strong><span>${label}</span></article>`)
     .join('');
